@@ -38,7 +38,10 @@ pipeline {
                     }
 
                     post {
-                        junit 'jest-results/junit.xml'
+                        always {
+                            junit 'jest-results/junit.xml'
+
+                        }
                     }
                 }
 
@@ -58,8 +61,10 @@ pipeline {
                         '''
                     }
                     post {
+                        always {
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])                        
+                        }
                         
-                        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])                        
                     }
                 }
             }
