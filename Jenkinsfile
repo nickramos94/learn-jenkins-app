@@ -82,7 +82,7 @@ pipeline {
 
                     steps {
                         sh '''
-                            npx playwright 
+                            npx playwright test --reporterhtml
                         '''
                     }
 
