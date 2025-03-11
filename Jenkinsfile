@@ -50,7 +50,7 @@ pipeline {
                     }
                 }
 
-                stage('E2E'){
+                stage('E2E'){ // Tests that are run against a locally built website
                     agent {
                         docker {
                             image 'mcr.microsoft.com/playwright:v1.48.1-noble'
@@ -67,9 +67,34 @@ pipeline {
                     }
                     post {
                         always {
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML Report', reportTitles: '', useWrapperFileDirectly: true])                        
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright Local Report', reportTitles: '', useWrapperFileDirectly: true])                        
                         }
                         
+                    }
+                }
+                stage('Prod E2E'){ //Tests that are run against the production environment on Netify
+                    agent {
+                        docker {
+                            image 'mcr.microsoft.com/playwright:v1.48.1-noble'
+                            reuseNode true                    
+                        }
+                    }
+
+                    steps {
+                        sh '''
+                            npx playwright 
+                        '''
+                    }
+
+                    post {
+                        always {
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright E2E', reportTitles: '', useWrapperFileDirectly: true])                        
+                        }
+                        
+                    }
+
+                    environment {
+                        CI_ENVIRONMENT_URL = 'https://relaxed-beijinho-372ccb.netlify.app' // This variable tells plyawright where to perform the tests on
                     }
                 }
             }
