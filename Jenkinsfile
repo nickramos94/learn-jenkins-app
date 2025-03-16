@@ -110,11 +110,10 @@ pipeline {
             steps {
                 sh '''
                     npm install netlify-cli
-                    npm install node-jq
                     node_modules/.bin/netlify --version
                     echo "Deploying to staging site id: $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status 
-                    node_modules/.bin/netlify deploy --dir=build --json | node_modules/.bin/node-jq -r '.deploy_url'                 # We use the same syntax just without the --prod argument
+                    node_modules/.bin/netlify deploy --dir=build # We use the same syntax just without the --prod argument
                 '''
                 script{
                     env.STAGING_URL = sh(script: "node_modules/.bin/netlify deploy --dir=build --json | node_modules/.bin/node-jq -r '.deploy_url'", returnStdout: true)
