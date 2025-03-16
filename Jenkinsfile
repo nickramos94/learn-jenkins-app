@@ -98,6 +98,9 @@ pipeline {
                     CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
                     npx playwright test  --reporter=html
                 '''
+                script {
+                    env.CI_ENVIRONMENT_URL = sh(script: 'echo $CI_ENVIRONMENT_URL', returnStdout: true)
+                }
             }
 
             post {
@@ -124,7 +127,7 @@ pipeline {
             }
 
             environment {
-                CI_ENVIRONMENT_URL = 'YOUR NETLIFY URL'
+                CI_ENVIRONMENT_URL = ${env.CI_ENVIRONMENT_URL}
             }
 
             steps {
