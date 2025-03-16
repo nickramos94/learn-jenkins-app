@@ -99,7 +99,7 @@ pipeline {
                     npx playwright test  --reporter=html
                 '''
                 script {
-                    env.CI_ENVIRONMENT_URL = sh(script: 'echo $CI_ENVIRONMENT_URL', returnStdout: true)
+                    env.CI_ENVIRONMENT_URL = sh(script: 'node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json', returnStdout: true)
                     echo "The variable is:  ${env.CI_ENVIRONMENT_URL}"
                 }
             }
